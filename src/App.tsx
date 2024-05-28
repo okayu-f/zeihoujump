@@ -71,10 +71,7 @@ const Row: React.FC<RowProps> = ({ fixedValue, defaultValue, baseUrl }) => {
   // linkHref からドメインと省略された部分を抽出するロジック
   const extractLinkText = (url: string) => {
     try {
-      const { hostname, pathname, hash } = new URL(url);
-      if (hostname === "www.nta.go.jp") {
-        return `${hostname}/...${pathname.split("/").pop()}`;
-      }
+      const { hostname, hash } = new URL(url);
       return `${hostname}/...${hash}`;
     } catch {
       return url;
@@ -117,7 +114,6 @@ function App() {
       </Typography>
       <Box sx={{ p: 2 }}>
         <Row fixedValue="法規" defaultValue="第8条の3" baseUrl="https://elaws.e-gov.go.jp/document?lawid=340M50000040012#Mp-At_" />
-        {/* <Row fixedValue="法規通" defaultValue="2-3-3" linkHref="https://www.nta.go.jp/law/tsutatsu/kihon/hojin/02/02_03_03.htm" /> */}
         <Row fixedValue="法法" defaultValue="61条の2" baseUrl="https://elaws.e-gov.go.jp/document?lawid=340AC0000000034#Mp-At_" />
         <Row fixedValue="法令" defaultValue="第百十九条" baseUrl="https://elaws.e-gov.go.jp/document?lawid=340CO0000000097#Mp-At_" />
       </Box>
