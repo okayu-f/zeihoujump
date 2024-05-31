@@ -1,29 +1,32 @@
+import React, { useState } from "react";
+import { Box, Link, TextField, Typography, createTheme, ThemeProvider, CssBaseline, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Grid } from "@mui/material";
 import generateLinkEGov from "./generateLinkEGov";
-
-import { Box, Link, TextField, Typography, createTheme, ThemeProvider, CssBaseline } from "@mui/material";
-import { useState } from "react";
+import { laws, Law } from "./laws";
 import "./App.css";
 
 interface RowProps {
-  fixedValue: string;
   defaultValue: string;
-  baseUrl: string;
 }
 
-const Row: React.FC<RowProps> = ({ fixedValue, defaultValue, baseUrl }) => {
+const Row: React.FC<RowProps> = ({ defaultValue }) => {
   const [value, setValue] = useState(defaultValue);
+  const [selectedLaw, setSelectedLaw] = useState<Law | null>(null);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
 
-  const linkHref = generateLinkEGov(baseUrl, value);
+  const handleLawChange = (event: SelectChangeEvent<string>) => {
+    const law = laws.find(law => law.abbreviation === event.target.value) || null;
+    setSelectedLaw(law);
+  };
 
-  // linkHref からドメインと省略された部分を抽出するロジック
+  const linkHref = selectedLaw ? generateLinkEGov(selectedLaw.id, value) : "";
+
   const extractLinkText = (url: string) => {
     try {
-      const { hostname, hash } = new URL(url);
-      return `${hostname}/...${hash}`;
+      const { origin, hash } = new URL(url);
+      return `${origin}/...${hash}`;
     } catch {
       return url;
     }
@@ -32,44 +35,63 @@ const Row: React.FC<RowProps> = ({ fixedValue, defaultValue, baseUrl }) => {
   const linkText = extractLinkText(linkHref);
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-      <TextField
-        value={fixedValue}
-        InputProps={{
-          readOnly: true,
-        }}
-        sx={{ mr: 2, flex: 1 }}
-      />
-      <TextField value={value} onChange={handleChange} sx={{ mr: 2, flex: 2 }} />
-      <Box sx={{ flex: 4, display: "flex", alignItems: "center", borderBottom: "1px solid grey", height: "100%" }}>
-        <Link href={linkHref} sx={{ textAlign: "left", flex: 1, textDecoration: "none", color: "inherit" }} target="_blank" rel="noopener noreferrer">
-          {linkText}
-        </Link>
-      </Box>
-    </Box>
+    <Grid container item spacing={2} alignItems="center" width={'100%'}>
+      <Grid item xs={12} md={3}>
+        <FormControl fullWidth sx={{ minWidth: 200 }}>
+          <InputLabel id="law-select-label">法令</InputLabel>
+          <Select
+            labelId="law-select-label"
+            value={selectedLaw ? selectedLaw.abbreviation : ""}
+            onChange={handleLawChange}
+          >
+            {laws.map((law) => (
+              <MenuItem key={law.id} value={law.abbreviation}>
+                <Typography noWrap>{law.abbreviation} - {law.fullName}</Typography>
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Grid>
+      <Grid item xs={12} md={3}>
+        <TextField value={value} onChange={handleValueChange} fullWidth sx={{ minWidth: 200 }} />
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <Box sx={{ display: "flex", alignItems: "center", borderBottom: "1px solid grey", height: "100%", minWidth: 200, minHeight: 40 }}>
+          <Link
+            href={linkHref}
+            sx={{ textAlign: "left", flex: 1, textDecoration: "none", color: linkText ? "inherit" : "grey", display: "inline-block" }}
+            target="_blank"
+            rel="noopener noreferrer"
+            noWrap
+          >
+            {linkText || "ここにURLが表示されます"}
+          </Link>
+        </Box>
+      </Grid>
+    </Grid>
   );
 };
 
 const theme = createTheme({
   palette: {
-    mode: "light", // ライトテーマを固定
+    mode: "light",
   },
 });
 
-function App() {
+const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Typography variant="h5" component="h1" sx={{ mb: 4 }}>
         Zeihou Jump
       </Typography>
-      <Box sx={{ p: 2 }}>
-        <Row fixedValue="法規" defaultValue="第8条の3" baseUrl="https://elaws.e-gov.go.jp/document?lawid=340M50000040012#Mp-At_" />
-        <Row fixedValue="法法" defaultValue="61条の2" baseUrl="https://elaws.e-gov.go.jp/document?lawid=340AC0000000034#Mp-At_" />
-        <Row fixedValue="法令" defaultValue="第百十九条" baseUrl="https://elaws.e-gov.go.jp/document?lawid=340CO0000000097#Mp-At_" />
-      </Box>
+      <Grid container spacing={2} sx={{ p: 2 }}>
+        <Row defaultValue="第8条の3" />
+        <Row defaultValue="61条の2" />
+        <Row defaultValue="第百十九条" />
+      </Grid>
     </ThemeProvider>
   );
-}
+};
 
 export default App;

@@ -42,11 +42,12 @@ const convertLawText = (value: string) => {
   }
 };
 
-const generateLinkEGov = (baseurl: string, value: string) => {
+const generateLinkEGov = (lawId: string, value: string) => {
+  const baseUrl = "https://elaws.e-gov.go.jp/document?lawid="
   const arabicNumValue = kansujiToArabic(value);
   const convertedValue = convertLawText(arabicNumValue);
 
-  return `${baseurl}${convertedValue}`;
+  return `${baseUrl}${lawId}#Mp-At_${convertedValue}`;
 };
 
 export default generateLinkEGov;
