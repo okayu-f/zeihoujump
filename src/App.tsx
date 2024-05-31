@@ -9,11 +9,11 @@ interface RowProps {
 }
 
 const Row: React.FC<RowProps> = ({ defaultValue }) => {
-  const [value, setValue] = useState(defaultValue);
+  const [articleNum, setArticleNum] = useState(defaultValue);
   const [selectedLaw, setSelectedLaw] = useState<Law | null>(null);
 
   const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
+    setArticleNum(event.target.value);
   };
 
   const handleLawChange = (event: SelectChangeEvent<string>) => {
@@ -21,7 +21,7 @@ const Row: React.FC<RowProps> = ({ defaultValue }) => {
     setSelectedLaw(law);
   };
 
-  const linkHref = selectedLaw ? generateLinkEGov(selectedLaw.id, value) : "";
+  const linkHref = selectedLaw ? generateLinkEGov(selectedLaw.id, articleNum) : "";
 
   const extractLinkText = (url: string) => {
     try {
@@ -53,7 +53,7 @@ const Row: React.FC<RowProps> = ({ defaultValue }) => {
         </FormControl>
       </Grid>
       <Grid item xs={12} md={3}>
-        <TextField value={value} onChange={handleValueChange} fullWidth sx={{ minWidth: 200 }} />
+        <TextField value={articleNum} onChange={handleValueChange} fullWidth sx={{ minWidth: 200 }} />
       </Grid>
       <Grid item xs={12} md={6}>
         <Box sx={{ display: "flex", alignItems: "center", borderBottom: "1px solid grey", height: "100%", minWidth: 200, minHeight: 40 }}>

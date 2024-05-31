@@ -26,7 +26,7 @@ const kansujiToArabic = (value: string) => {
   });
 };
 
-const convertLawText = (value: string) => {
+const convertArticleNum = (value: string) => {
   const matches = value.match(/([^0-9]*)(\d+)([^0-9]*)(\d*)([^0-9]*)/);
   if (!matches) {
     return "";
@@ -42,12 +42,12 @@ const convertLawText = (value: string) => {
   }
 };
 
-const generateLinkEGov = (lawId: string, value: string) => {
+const generateLinkEGov = (lawId: string, articleNum: string) => {
   const baseUrl = "https://elaws.e-gov.go.jp/document?lawid="
-  const arabicNumValue = kansujiToArabic(value);
-  const convertedValue = convertLawText(arabicNumValue);
+  const arabicArticleNum = kansujiToArabic(articleNum);
+  const convertedNum = convertArticleNum(arabicArticleNum);
 
-  return `${baseUrl}${lawId}#Mp-At_${convertedValue}`;
+  return `${baseUrl}${lawId}#Mp-At_${convertedNum}`;
 };
 
 export default generateLinkEGov;
