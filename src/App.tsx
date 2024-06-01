@@ -1,16 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Link, TextField, Typography, createTheme, ThemeProvider, CssBaseline, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Grid } from "@mui/material";
 import generateLinkEGov from "./generateLinkEGov";
 import { laws, Law } from "./laws";
 import "./App.css";
 
 interface RowProps {
+  id: string;
   defaultValue: string;
 }
 
-const Row: React.FC<RowProps> = ({ defaultValue }) => {
+const Row: React.FC<RowProps> = ({ id, defaultValue }) => {
   const [articleNum, setArticleNum] = useState(defaultValue);
-  const [selectedLaw, setSelectedLaw] = useState<Law | null>(null);
+  const [selectedLaw, setSelectedLaw] = useState<Law | null>(() => {
+    const savedLaw = localStorage.getItem(`selectedLaw-${id}`);
+    return savedLaw ? JSON.parse(savedLaw) : null;
+  });
+
+  useEffect(() => {
+    if (selectedLaw) {
+      localStorage.setItem(`selectedLaw-${id}`, JSON.stringify(selectedLaw));
+    } else {
+      localStorage.removeItem(`selectedLaw-${id}`);
+    }
+  }, [selectedLaw, id]);
 
   const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setArticleNum(event.target.value);
@@ -86,9 +98,9 @@ const App: React.FC = () => {
         Zeihou Jump
       </Typography>
       <Grid container spacing={2} sx={{ p: 2 }}>
-        <Row defaultValue="第8条の3" />
-        <Row defaultValue="61条の2" />
-        <Row defaultValue="第百十九条" />
+        <Row id="row1" defaultValue="第8条の3" />
+        <Row id="row2" defaultValue="61条の2" />
+        <Row id="row3" defaultValue="第百十九条" />
       </Grid>
     </ThemeProvider>
   );
