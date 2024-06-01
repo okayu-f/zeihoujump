@@ -1,5 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Box, Link, TextField, Typography, createTheme, ThemeProvider, CssBaseline, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Grid } from "@mui/material";
+import {
+  Box,
+  Link,
+  TextField,
+  Typography,
+  createTheme,
+  ThemeProvider,
+  CssBaseline,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Grid,
+} from "@mui/material";
 import generateLinkEGov from "./generateLinkEGov";
 import { laws, Law } from "./laws";
 import "./App.css";
@@ -47,7 +61,7 @@ const Row: React.FC<RowProps> = ({ id, defaultValue }) => {
   const linkText = extractLinkText(linkHref);
 
   return (
-    <Grid container item spacing={2} alignItems="center" width={'100%'}>
+    <Grid container item spacing={2} alignItems="center" width={"100%"}>
       <Grid item xs={12} md={3}>
         <FormControl fullWidth sx={{ minWidth: 200 }}>
           <InputLabel id="law-select-label">法令</InputLabel>
