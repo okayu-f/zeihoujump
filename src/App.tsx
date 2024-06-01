@@ -24,11 +24,18 @@ interface RowProps {
 }
 
 const Row: React.FC<RowProps> = ({ id, defaultValue }) => {
-  const [articleNum, setArticleNum] = useState(defaultValue);
+  const [articleNum, setArticleNum] = useState<string>(() => {
+    const savedArticleNum = localStorage.getItem(`articleNum-${id}`);
+    return savedArticleNum ? savedArticleNum : defaultValue;
+  });
   const [selectedLaw, setSelectedLaw] = useState<Law | null>(() => {
     const savedLaw = localStorage.getItem(`selectedLaw-${id}`);
     return savedLaw ? JSON.parse(savedLaw) : null;
   });
+
+  useEffect(() => {
+    localStorage.setItem(`articleNum-${id}`, articleNum);
+  }, [articleNum, id]);
 
   useEffect(() => {
     if (selectedLaw) {
