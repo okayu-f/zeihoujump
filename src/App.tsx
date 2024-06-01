@@ -29,7 +29,7 @@ const Row: React.FC<RowProps> = ({ id, defaultValue }) => {
   };
 
   const handleLawChange = (event: SelectChangeEvent<string>) => {
-    const law = laws.find(law => law.abbreviation === event.target.value) || null;
+    const law = laws.find((law) => law.id === event.target.value) || null;
     setSelectedLaw(law);
   };
 
@@ -53,12 +53,18 @@ const Row: React.FC<RowProps> = ({ id, defaultValue }) => {
           <InputLabel id="law-select-label">法令</InputLabel>
           <Select
             labelId="law-select-label"
-            value={selectedLaw ? selectedLaw.abbreviation : ""}
+            value={selectedLaw ? selectedLaw.id : ""}
             onChange={handleLawChange}
+            renderValue={(selected) => {
+              const law = laws.find((law) => law.id === selected);
+              return <Typography sx={{ textAlign: "left" }}>{law ? `${law.abbreviation} - ${law.fullName}` : ""}</Typography>;
+            }}
           >
             {laws.map((law) => (
-              <MenuItem key={law.id} value={law.abbreviation}>
-                <Typography noWrap>{law.abbreviation} - {law.fullName}</Typography>
+              <MenuItem key={law.id} value={law.id}>
+                <Typography noWrap>
+                  {law.abbreviation} - {law.fullName}
+                </Typography>
               </MenuItem>
             ))}
           </Select>
