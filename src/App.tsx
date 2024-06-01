@@ -74,6 +74,7 @@ const Row: React.FC<RowProps> = ({ id, defaultValue }) => {
           <InputLabel id="law-select-label">法令</InputLabel>
           <Select
             labelId="law-select-label"
+            label="法令"
             value={selectedLaw ? selectedLaw.id : ""}
             onChange={handleLawChange}
             renderValue={(selected) => {
