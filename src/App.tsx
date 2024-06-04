@@ -13,17 +13,22 @@ import {
   Select,
   SelectChangeEvent,
   Grid,
+  IconButton,
 } from "@mui/material";
+import { Add, Remove } from "@mui/icons-material";
 import generateLinkEGov from "./generateLinkEGov";
 import { laws, Law } from "./laws";
 import "./App.css";
 
 interface RowProps {
-  id: string;
+  id: number;
   defaultValue: string;
+  onAddRow: () => void;
+  onRemoveRow: () => void;
+  canRemove: boolean;
 }
 
-const Row: React.FC<RowProps> = ({ id, defaultValue }) => {
+const Row: React.FC<RowProps> = ({ id, defaultValue, onAddRow, onRemoveRow, canRemove }) => {
   const [articleNum, setArticleNum] = useState<string>(() => {
     const savedArticleNum = localStorage.getItem(`articleNum-${id}`);
     return savedArticleNum ? savedArticleNum : defaultValue;
@@ -95,7 +100,7 @@ const Row: React.FC<RowProps> = ({ id, defaultValue }) => {
       <Grid item xs={12} md={3}>
         <TextField value={articleNum} onChange={handleValueChange} fullWidth sx={{ minWidth: 200 }} />
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={4}>
         <Box sx={{ display: "flex", alignItems: "center", borderBottom: "1px solid grey", height: "100%", minWidth: 200, minHeight: 40 }}>
           <Link
             href={linkHref}
@@ -108,6 +113,14 @@ const Row: React.FC<RowProps> = ({ id, defaultValue }) => {
           </Link>
         </Box>
       </Grid>
+      <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+        <IconButton onClick={onAddRow}>
+          <Add />
+        </IconButton>
+        <IconButton onClick={onRemoveRow} disabled={!canRemove}>
+          <Remove />
+        </IconButton>
+      </Grid>
     </Grid>
   );
 };
@@ -119,6 +132,31 @@ const theme = createTheme({
 });
 
 const App: React.FC = () => {
+  const [rows, setRows] = useState<{ id: number; defaultValue: string }[]>([
+    { id: 1, defaultValue: "第8条の3" },
+    { id: 2, defaultValue: "61条の2" },
+    { id: 3, defaultValue: "第百十九条" },
+  ]);
+
+  const [nextId, setNextId] = useState(4);
+
+  const addRow = (index: number) => {
+    if (rows.length < 10) {
+      const newRow = { id: nextId, defaultValue: "" };
+      const newRows = [...rows];
+      newRows.splice(index + 1, 0, newRow);
+      setRows(newRows);
+      setNextId(nextId + 1);
+    }
+  };
+
+  const removeRow = (index: number) => {
+    if (rows.length > 1) {
+      const newRows = rows.filter((_, i) => i !== index);
+      setRows(newRows);
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -126,9 +164,16 @@ const App: React.FC = () => {
         Zeihou Jump
       </Typography>
       <Grid container spacing={2} sx={{ p: 2 }}>
-        <Row id="row1" defaultValue="第8条の3" />
-        <Row id="row2" defaultValue="61条の2" />
-        <Row id="row3" defaultValue="第百十九条" />
+        {rows.map((row, index) => (
+          <Row
+            key={row.id}
+            id={row.id}
+            defaultValue={row.defaultValue}
+            onAddRow={() => addRow(index)}
+            onRemoveRow={() => removeRow(index)}
+            canRemove={rows.length > 1}
+          />
+        ))}
       </Grid>
     </ThemeProvider>
   );
