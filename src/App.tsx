@@ -74,46 +74,48 @@ const Row: React.FC<RowProps> = ({ id, defaultValue, onAddRow, onRemoveRow, canR
 
   return (
     <Grid container item spacing={2} alignItems="center" minWidth={{ md:"100vw", lg:"1200px" }}>
-      <Grid item xs={12} md={3}>
-        <FormControl fullWidth>
-          <InputLabel id="law-select-label">法令</InputLabel>
-          <Select
-            labelId="law-select-label"
-            label="法令"
-            value={selectedLaw ? selectedLaw.id : ""}
-            onChange={handleLawChange}
-            renderValue={(selected) => {
-              const law = laws.find((law) => law.id === selected);
-              return <Typography sx={{ textAlign: "left" }}>{law ? `${law.abbreviation} - ${law.fullName}` : ""}</Typography>;
-            }}
-          >
-            {laws.map((law) => (
-              <MenuItem key={law.id} value={law.id}>
-                <Typography noWrap>
-                  {law.abbreviation} - {law.fullName}
-                </Typography>
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+      <Grid container item xs={10} alignItems="center" spacing={2}>
+        <Grid item xs={12} md={3}>
+          <FormControl fullWidth>
+            <InputLabel id="law-select-label">法令</InputLabel>
+            <Select
+              labelId="law-select-label"
+              label="法令"
+              value={selectedLaw ? selectedLaw.id : ""}
+              onChange={handleLawChange}
+              renderValue={(selected) => {
+                const law = laws.find((law) => law.id === selected);
+                return <Typography sx={{ textAlign: "left" }}>{law ? `${law.abbreviation} - ${law.fullName}` : ""}</Typography>;
+              }}
+            >
+              {laws.map((law) => (
+                <MenuItem key={law.id} value={law.id}>
+                  <Typography noWrap>
+                    {law.abbreviation} - {law.fullName}
+                  </Typography>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <TextField value={articleNum} onChange={handleValueChange} fullWidth />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Box sx={{ display: "flex", alignItems: "center", borderBottom: "1px solid grey", height: "100%", minHeight: 40 }}>
+            <Link
+              href={linkHref}
+              sx={{ textAlign: "left", flex: 1, textDecoration: "none", color: linkText ? "inherit" : "grey" }}
+              target="_blank"
+              rel="noopener noreferrer"
+              noWrap
+            >
+              {linkText || "ここにURLが表示されます"}
+            </Link>
+          </Box>
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={3}>
-        <TextField value={articleNum} onChange={handleValueChange} fullWidth />
-      </Grid>
-      <Grid item xs={12} md={4}>
-        <Box sx={{ display: "flex", alignItems: "center", borderBottom: "1px solid grey", height: "100%", minHeight: 40 }}>
-          <Link
-            href={linkHref}
-            sx={{ textAlign: "left", flex: 1, textDecoration: "none", color: linkText ? "inherit" : "grey" }}
-            target="_blank"
-            rel="noopener noreferrer"
-            noWrap
-          >
-            {linkText || "ここにURLが表示されます"}
-          </Link>
-        </Box>
-      </Grid>
-      <Grid item xs={12} md={2} sx={{ display: "flex", justifyContent: "center" }}>
+      <Grid item xs={2} sx={{ display: "flex", justifyContent: "center" }}>
         <IconButton onClick={onAddRow}>
           <Add />
         </IconButton>
@@ -163,7 +165,7 @@ const App: React.FC = () => {
       <Typography variant="h5" component="h1" sx={{ mb: 4 }}>
         Zeihou Jump
       </Typography>
-      <Grid container direction="column" spacing={2} sx={{ p: 2 }}>
+      <Grid container direction="column" spacing={6} sx={{ p: 2 }}>
         {rows.map((row, index) => (
           <Row
             key={row.id}
