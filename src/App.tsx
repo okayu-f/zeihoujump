@@ -73,9 +73,9 @@ const Row: React.FC<RowProps> = ({ id, defaultValue, onAddRow, onRemoveRow, canR
   const linkText = extractLinkText(linkHref);
 
   return (
-    <Grid container item spacing={2} alignItems="center" width={"100%"}>
+    <Grid container item spacing={2} alignItems="center" minWidth={{ md:"100vw", lg:"1200px" }}>
       <Grid item xs={12} md={3}>
-        <FormControl fullWidth sx={{ minWidth: 200 }}>
+        <FormControl fullWidth>
           <InputLabel id="law-select-label">法令</InputLabel>
           <Select
             labelId="law-select-label"
@@ -98,13 +98,13 @@ const Row: React.FC<RowProps> = ({ id, defaultValue, onAddRow, onRemoveRow, canR
         </FormControl>
       </Grid>
       <Grid item xs={12} md={3}>
-        <TextField value={articleNum} onChange={handleValueChange} fullWidth sx={{ minWidth: 200 }} />
+        <TextField value={articleNum} onChange={handleValueChange} fullWidth />
       </Grid>
       <Grid item xs={12} md={4}>
-        <Box sx={{ display: "flex", alignItems: "center", borderBottom: "1px solid grey", height: "100%", minWidth: 200, minHeight: 40 }}>
+        <Box sx={{ display: "flex", alignItems: "center", borderBottom: "1px solid grey", height: "100%", minHeight: 40 }}>
           <Link
             href={linkHref}
-            sx={{ textAlign: "left", flex: 1, textDecoration: "none", color: linkText ? "inherit" : "grey", display: "inline-block" }}
+            sx={{ textAlign: "left", flex: 1, textDecoration: "none", color: linkText ? "inherit" : "grey" }}
             target="_blank"
             rel="noopener noreferrer"
             noWrap
@@ -113,7 +113,7 @@ const Row: React.FC<RowProps> = ({ id, defaultValue, onAddRow, onRemoveRow, canR
           </Link>
         </Box>
       </Grid>
-      <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Grid item xs={12} md={2} sx={{ display: "flex", justifyContent: "center" }}>
         <IconButton onClick={onAddRow}>
           <Add />
         </IconButton>
@@ -163,7 +163,7 @@ const App: React.FC = () => {
       <Typography variant="h5" component="h1" sx={{ mb: 4 }}>
         Zeihou Jump
       </Typography>
-      <Grid container spacing={2} sx={{ p: 2 }}>
+      <Grid container direction="column" spacing={2} sx={{ p: 2 }}>
         {rows.map((row, index) => (
           <Row
             key={row.id}
