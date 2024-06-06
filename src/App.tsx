@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Typography, createTheme, ThemeProvider, CssBaseline, Grid } from "@mui/material";
 import Row from "./Row";
 import "./App.css";
@@ -10,13 +10,23 @@ const theme = createTheme({
 });
 
 const App: React.FC = () => {
-  const [rows, setRows] = useState<{ id: number; defaultValue: string }[]>([
-    { id: 1, defaultValue: "第8条の3" },
-    { id: 2, defaultValue: "61条の2" },
-    { id: 3, defaultValue: "第百十九条" },
-  ]);
+  const [rows, setRows] = useState<{ id: number; defaultValue: string }[]>(() => {
+    const savedRows = localStorage.getItem("rows");
+    return savedRows ? JSON.parse(savedRows) : [
+      { id: 1, defaultValue: "第8条の3" },
+      { id: 2, defaultValue: "61条の2" },
+      { id: 3, defaultValue: "第百十九条" },
+    ];
+  });
 
-  const [nextId, setNextId] = useState(4);
+  const [nextId, setNextId] = useState(() => {
+    const savedRows = localStorage.getItem("rows");
+    return savedRows ? JSON.parse(savedRows).length + 1 : 4;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("rows", JSON.stringify(rows));
+  }, [rows]);
 
   const addRow = (index: number) => {
     if (rows.length < 10) {
