@@ -35,7 +35,7 @@
     ],
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/explicit-module-boundary-types": ["error"],
+    "@typescript-eslint/explicit-module-boundary-types": "error",
     "@typescript-eslint/no-misused-promises": [
       "error",
       {
@@ -113,6 +113,7 @@
   "settings": {
     "react": {
       "version": "detect"
-    }
+    },
+    "ignorePatterns": ["vite.config.ts"]
   }
 }
