@@ -45,7 +45,7 @@ const convertArticleNum = (value: string) => {
   }
 };
 
-const generateLinkEGov = (lawId: string, articleNum: string) => {
+const generateLinkEGov = (lawId: string, articleNum: string): string => {
   const baseUrl = 'https://elaws.e-gov.go.jp/document?lawid=';
   const arabicArticleNum = kansujiToArabic(articleNum);
   const convertedNum = convertArticleNum(arabicArticleNum);

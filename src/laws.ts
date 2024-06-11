@@ -4,6 +4,16 @@ export interface Law {
   id: string;
 }
 
+export const isLaw = (data: unknown): data is Law => {
+  if (typeof data !== 'object' || data === null) {
+    return false;
+  }
+
+  const law = data as Law;
+
+  return typeof law.abbreviation === 'string' && typeof law.fullName === 'string' && typeof law.id === 'string';
+};
+
 export const laws: Law[] = [
   { abbreviation: '印法', fullName: '印紙税法', id: '342AC0000000023' },
   { abbreviation: '印令', fullName: '印紙税法施行令', id: '342CO0000000108' },

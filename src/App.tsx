@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useState, useEffect } from 'react';
 import { Box, Typography, createTheme, ThemeProvider, CssBaseline, Grid } from '@mui/material';
-import Row from './Row';
+import { Row, isRowDataArray, type RowData } from './Row';
 import './App.css';
 
 const theme = createTheme({
@@ -11,23 +11,18 @@ const theme = createTheme({
 });
 
 const App: React.FC = () => {
-  const [rows, setRows] = useState<Array<{ id: number; defaultValue: string }>>(() => {
-    const savedRows = localStorage.getItem('rows');
+  const savedRowsJson = localStorage.getItem('rows');
+  const savedRows: unknown = savedRowsJson !== null ? JSON.parse(savedRowsJson) : null;
+  const defaultRows = isRowDataArray(savedRows)
+    ? savedRows
+    : [
+        { id: 1, defaultValue: '' },
+        { id: 2, defaultValue: '' },
+        { id: 3, defaultValue: '' },
+      ];
 
-    return savedRows
-      ? JSON.parse(savedRows)
-      : [
-          { id: 1, defaultValue: '第8条の3' },
-          { id: 2, defaultValue: '61条の2' },
-          { id: 3, defaultValue: '第百十九条' },
-        ];
-  });
-
-  const [nextId, setNextId] = useState(() => {
-    const savedRows = localStorage.getItem('rows');
-
-    return savedRows ? JSON.parse(savedRows).length + 1 : 4;
-  });
+  const [rows, setRows] = useState<RowData[]>(defaultRows);
+  const [nextId, setNextId] = useState(defaultRows.length + 1);
 
   useEffect(() => {
     localStorage.setItem('rows', JSON.stringify(rows));

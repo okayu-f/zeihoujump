@@ -3,26 +3,45 @@ import { useState, useEffect } from 'react';
 import { Add, Remove } from '@mui/icons-material';
 import { Box, Link, TextField, Typography, FormControl, InputLabel, MenuItem, Select, type SelectChangeEvent, Grid, IconButton } from '@mui/material';
 import generateLinkEGov from './generateLinkEGov';
-import { laws, type Law } from './laws';
-
-interface RowProps {
+import { laws, isLaw, type Law } from './laws';
+export interface RowData {
   id: number;
   defaultValue: string;
+}
+
+interface RowProps extends RowData {
   onAddRow: () => void;
   onRemoveRow: () => void;
   canRemove: boolean;
 }
 
-const Row: React.FC<RowProps> = ({ id, defaultValue, onAddRow, onRemoveRow, canRemove }) => {
+export const isRowDataArray = (data: unknown): data is RowData[] => {
+  if (!Array.isArray(data)) {
+    return false;
+  }
+
+  return data.every(
+    (item) =>
+      typeof item === 'object' &&
+      item !== null &&
+      'id' in item &&
+      'defaultValue' in item &&
+      typeof (item as RowData).id === 'number' &&
+      typeof (item as RowData).defaultValue === 'string',
+  );
+};
+
+export const Row: React.FC<RowProps> = ({ id, defaultValue, onAddRow, onRemoveRow, canRemove }) => {
   const [articleNum, setArticleNum] = useState<string>(() => {
     const savedArticleNum = localStorage.getItem(`articleNum-${id}`);
 
-    return savedArticleNum || defaultValue;
+    return savedArticleNum ?? defaultValue;
   });
   const [selectedLaw, setSelectedLaw] = useState<Law | null>(() => {
-    const savedLaw = localStorage.getItem(`selectedLaw-${id}`);
+    const savedLawJson = localStorage.getItem(`selectedLaw-${id}`);
+    const savedLaw: unknown = savedLawJson !== null ? JSON.parse(savedLawJson) : null;
 
-    return savedLaw ? JSON.parse(savedLaw) : null;
+    return isLaw(savedLaw) ? savedLaw : null;
   });
 
   useEffect(() => {
@@ -42,7 +61,7 @@ const Row: React.FC<RowProps> = ({ id, defaultValue, onAddRow, onRemoveRow, canR
   };
 
   const handleLawChange = (event: SelectChangeEvent<string>) => {
-    const law = laws.find((law) => law.id === event.target.value) || null;
+    const law = laws.find((law) => law.id === event.target.value) ?? null;
     setSelectedLaw(law);
   };
 
@@ -132,5 +151,3 @@ const Row: React.FC<RowProps> = ({ id, defaultValue, onAddRow, onRemoveRow, canR
     </Grid>
   );
 };
-
-export default Row;
