@@ -16,9 +16,9 @@ const App: React.FC = () => {
   const defaultRows = isRowDataArray(savedRows)
     ? savedRows
     : [
-        { id: 1, defaultValue: '' },
-        { id: 2, defaultValue: '' },
-        { id: 3, defaultValue: '' },
+        { id: 1, defaultValue: '第8条の3' },
+        { id: 2, defaultValue: '61-2' },
+        { id: 3, defaultValue: '第百十九条' },
       ];
 
   const [rows, setRows] = useState<RowData[]>(defaultRows);
